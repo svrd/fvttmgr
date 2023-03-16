@@ -10,6 +10,6 @@ if [ "$1" != "" ]; then
     game="-$1"
 fi
 
-./stop_foundry.sh
+stop_foundry.sh
 
 ssh $HOST "screen -S foundryvtt -dm ./foundryvtt${game}/start_foundry.sh"
