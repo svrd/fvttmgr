@@ -6,4 +6,11 @@ fi
 
 . ${HOME}/.fvttmgr.cfg
 
-ssh $HOST "screen -S foundryvtt -p 0 -X quit"
+if [ "$1" != "" ]; then
+    GAME="$1"
+else
+    echo "ERROR: game name must be provided"
+    exit 1
+fi
+
+ssh ${HOST} "docker stop ${GAME}"

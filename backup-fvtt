@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 if [ ! -f "${HOME}/.fvttmgr.cfg" ]; then
   echo "ERROR: ${HOME}/.fvttmgr.cfg not found!"
   exit 1
@@ -21,25 +22,25 @@ if [ ! -d "${BACKUP_DIR}" ]; then
   exit 1
 fi
 
-game=""
+GAME=""
 if [ "$1" != "" ]; then
-    game="-$1"
+    GAME="$1"
 fi
 
-ssh $HOST "ls foundryvtt${game}"
+ssh ${HOST} "docker stop ${GAME} 2> /dev/null"
+
+set -e
+
+ssh $HOST "ls foundryvtt-${GAME} 2> /dev/null"
 if [ "$?" != "0" ]; then
-    echo "Game foundryvtt-${game} does not exist"
+    echo "Game foundryvtt-${GAME} does not exist"
     exit 1
 fi
 
-echo "Stopping foundryvtt..."
-ssh $HOST "screen -S foundryvtt -p 0 -X quit"
-
 echo "Creating archive..."
-ssh $HOST "zip -r foundryvtt${game}.zip foundryvtt${game}"
+ssh $HOST "zip -r foundryvtt-${GAME}.zip foundryvtt-${GAME}"
 
 echo "Copying archive..."
-scp $HOST:~/foundryvtt${game}.zip ${BACKUP_DIR}
+scp $HOST:~/foundryvtt-${GAME}.zip ${BACKUP_DIR}
 
 echo "Done!"
-

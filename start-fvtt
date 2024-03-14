@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+if [ ! -f "${HOME}/.fvttmgr.cfg" ]; then
+  echo "ERROR: ${HOME}/.fvttmgr.cfg not found!"
+  exit 1
+fi
+
+. ${HOME}/.fvttmgr.cfg
+
+if [ "$1" != "" ]; then
+    GAME="$1"
+else
+    echo "ERROR: game name must be provided"
+    exit 1
+fi
+
+ssh ${HOST} <<EOI
+CWD=\$(pwd)
+docker run -itd \
+  --mount type=bind,source=\${CWD}/foundryvtt-${GAME},target=/foundryvtt \
+  --user \$(id -u):\$(id -g) \
+  --net host \
+  --name ${GAME} \
+  --rm \
+  fvtt-runner:latest /foundryvtt/start_foundry.sh
+EOI
