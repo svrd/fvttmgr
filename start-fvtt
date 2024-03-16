@@ -21,5 +21,5 @@ docker run -itd \
   --net host \
   --name ${GAME} \
   --rm \
-  fvtt-runner:latest /foundryvtt/start_foundry.sh
+  fvtt-runner:latest node /foundryvtt/foundryvtt/resources/app/main.js --dataPath=/foundryvtt/data
 EOI
